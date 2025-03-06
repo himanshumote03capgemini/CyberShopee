@@ -16,7 +16,7 @@ namespace CyberShopee.Repository.DAO
 
         Task<Customer> GetCustomerByEmail(string email);
 
-        Task<IEnumerable<Customer>> SearchCustomers(string keyword);
+        Task<IEnumerable<Customer>> SearchCustomers(string name);
 
         Task<IEnumerable<Customer>> GetCustomersByRegistrationDateRange(DateTime startDate, DateTime endDate);
 
