@@ -32,7 +32,7 @@ namespace CyberShopee.Models
 
         // Navigation Property
         public Category? Category { get; set; }
-        //public ICollection<OrderDetails> OrderDetails { get; set; }
+        public ICollection<OrderDetails>? OrderDetails { get; set; }
         //public ICollection<ShoppingCart> ShoppingCarts { get; set; }
     }
 }

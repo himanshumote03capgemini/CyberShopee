@@ -24,6 +24,11 @@ namespace CyberShopee.Data
                 .HasForeignKey(p => p.CategoryId)  // Foreign Key
                 .OnDelete(DeleteBehavior.Cascade); // If Category is deleted, Products are  also deleted
 
+            modelBuilder.Entity<OrderDetails>()
+                .HasOne(od => od.Product)
+                .WithMany(p => p.OrderDetails)
+                .HasForeignKey(od => od.ProductId)
+                .OnDelete(DeleteBehavior.SetNull); // Sets ProductId=NULL instead of deleting the OrderDetails
         }
     }
 }

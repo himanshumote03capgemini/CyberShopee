@@ -19,7 +19,7 @@ namespace CyberShopee.Models
         public int OrderId { get; set; }
 
         [ForeignKey("Product")]
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
 
         // Navigation Properties
         public Order? Order { get; set; }
