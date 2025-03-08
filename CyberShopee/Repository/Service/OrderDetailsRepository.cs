@@ -1,6 +1,7 @@
 ﻿using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Repository.DAO;
+using Microsoft.EntityFrameworkCore;
 
 namespace CyberShopee.Repository.Service
 {
@@ -11,32 +12,55 @@ namespace CyberShopee.Repository.Service
 
         public async Task<bool> AddOrderDetails(OrderDetails orderDetails)
         {
-            throw new NotImplementedException();
+            await _context.OrderDetails.AddAsync(orderDetails);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteOrderDetails(int orderDetailId)
         {
-            throw new NotImplementedException();
+            var res = _context.OrderDetails.FirstOrDefault(x => x.OrderDetailId == orderDetailId);
+            if (res == null) return false;
+            _context.OrderDetails.Remove(res);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<OrderDetails>> GetAllOrderDetails()
         {
-            throw new NotImplementedException();
+            IEnumerable<OrderDetails> res = _context.OrderDetails;
+            if (res == null) return null;
+            return res;
         }
 
         public async Task<OrderDetails> GetOrderDetailsById(int orderDetailId)
         {
-            throw new NotImplementedException();
+            var res = await _context.OrderDetails.FirstOrDefaultAsync(y => y.OrderDetailId == orderDetailId);
+            if (res == null) return null;
+            return res;
+
         }
 
         public async Task<IEnumerable<OrderDetails>> GetOrderDetailsByOrderId(int orderId)
         {
-            throw new NotImplementedException();
+            var res = await _context.OrderDetails.Where(od => od.OrderId == orderId).ToListAsync();
+            return res;
         }
 
         public async Task<bool> UpdateOrderDetails(int orderDetailId, OrderDetails orderDetails)
         {
-            throw new NotImplementedException();
+            var existingOrderDetail = await _context.OrderDetails.FindAsync(orderDetailId);
+            if (existingOrderDetail == null) return false;
+
+            existingOrderDetail.Quantity = orderDetails.Quantity;
+            existingOrderDetail.Cost = orderDetails.Cost;
+            existingOrderDetail.OrderId = orderDetails.OrderId;
+            existingOrderDetail.ProductId = orderDetails.ProductId;
+
+            _context.OrderDetails.Update(existingOrderDetail);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

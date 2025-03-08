@@ -1,6 +1,8 @@
-﻿using CyberShopee.Data;
+﻿using System.Collections.Generic;
+using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Repository.DAO;
+using Microsoft.EntityFrameworkCore;
 
 namespace CyberShopee.Repository.Service
 {
@@ -10,42 +12,68 @@ namespace CyberShopee.Repository.Service
         public OrderRepository(AppDbContext context) { _context = context; }
         public async Task<bool> AddOrder(Order order)
         {
-            throw new NotImplementedException();
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteOrder(int orderId)
         {
-            throw new NotImplementedException();
+            var res = _context.Orders.FirstOrDefault(x => x.OrderId == orderId);
+            if (res == null) return false;
+            _context.Orders.Remove(res);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<Order>> GetAllOrders()
         {
-            throw new NotImplementedException();
+            IEnumerable<Order> res = _context.Orders;
+            if (res == null) return null;
+            return res;
         }
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            throw new NotImplementedException();
+            var res = await _context.Orders.FirstOrDefaultAsync(y => y.OrderId == orderId);
+            if (res == null) return null;
+            return res;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByCustomerId(int customerId)
         {
-            throw new NotImplementedException();
+            IEnumerable<Order> res = await _context.Orders.Where(y => y.CustomerId == customerId).ToListAsync();
+            if (res == null) return null;
+            return res;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByDateRange(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException(); 
+            var res = await _context.Orders
+                        .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                        .ToListAsync();
+            return res;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByStatus(string status)
         {
-            throw new NotImplementedException();
+            var res = await _context.Orders
+                        .Where(o => o.Status.ToLower() == status.ToLower())
+                        .ToListAsync();
+            return res;
         }
 
-        public async Task<bool> UpdateOrder(int orderId, Order order)
+        public async Task<bool> UpdateOrder(int orderId, string status)
         {
-            throw new NotImplementedException();
+            var existingOrder = await _context.Orders.FindAsync(orderId);
+            if (existingOrder == null) return false;
+
+            existingOrder.Status = status;
+
+            _context.Orders.Update(existingOrder);
+            await _context.SaveChangesAsync();
+
+            return true;        
         }
     }
 }

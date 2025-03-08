@@ -10,7 +10,7 @@ namespace CyberShopee.Repository.DAO
 
         Task<bool> AddOrder(Order order);
 
-        Task<bool> UpdateOrder(int orderId, Order order);
+        Task<bool> UpdateOrder(int orderId, string status);
 
         Task<bool> DeleteOrder(int orderId);
 

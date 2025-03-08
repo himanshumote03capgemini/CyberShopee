@@ -15,6 +15,7 @@ namespace CyberShopee.Models
         public double TotalAmount { get; set; }
 
         public DateTime ShipDate { get; set; }
+
         public string Status { get; set; } = "Pending";
 
         // Foreign Keys
