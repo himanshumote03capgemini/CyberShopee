@@ -28,25 +28,83 @@ namespace CyberShopee.Repository.Service
             return true;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategories()
+        public async Task<IEnumerable<object>> GetAllCategories()
         {
-            IEnumerable<Category> res = _context.Categories;
-            if (res == null) return null;
-            return res;
+            var categories = await _context.Categories
+                .Include(c => c.Products)
+                .ToListAsync();
+
+            return categories.Select(c => new
+            {
+                c.CategoryId,
+                c.Name,
+                c.Description,
+                Products = c.Products.Select(p => new
+                {
+                    p.ProductId,
+                    p.CategoryId,
+                    p.ModelNumber,
+                    p.ModelName,
+                    p.Cost,
+                    p.Description,
+                    p.ContentType,
+                    ImageUrl = $"api/products/{p.ProductId}/image"
+                })
+            });
         }
 
-        public async Task<Category> GetCategoryById(int categoryId)
+        public async Task<object> GetCategoryById(int categoryId)
         {
-            var res = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryId == categoryId);
-            if (res == null) return null;
-            return res;
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.CategoryId == categoryId);
+
+            if (category == null) return null;
+
+            return new
+            {
+                category.CategoryId,
+                category.Name,
+                category.Description,
+                Products = category.Products.Select(p => new
+                {
+                    p.ProductId,
+                    p.CategoryId,
+                    p.ModelNumber,
+                    p.ModelName,
+                    p.Cost,
+                    p.Description,
+                    p.ContentType,
+                    Image = $"api/products/{p.ProductId}/image"
+                })
+            };
         }
 
-        public async Task<IEnumerable<Category>> SearchByCategoryName(string CategoryName)
+        public async Task<IEnumerable<object>> SearchByCategoryName(string categoryName)
         {
-            IEnumerable<Category> res = await _context.Categories.Where(x => x.Name.ToLower() == CategoryName.ToLower()).ToListAsync();
-            if (res == null) return null;
-            return res;
+            IEnumerable<Category> res = await _context.Categories.Where(x => x.Name.ToLower() == categoryName.ToLower()).ToListAsync();
+            var categories = await _context.Categories
+                .Where(c => c.Name.Contains(categoryName))
+                .Include(c => c.Products)
+                .ToListAsync();
+
+            return categories.Select(c => new
+            {
+                c.CategoryId,
+                c.Name,
+                c.Description,
+                Products = c.Products.Select(p => new
+                {
+                    p.ProductId,
+                    p.CategoryId,
+                    p.ModelNumber,
+                    p.ModelName,
+                    p.Cost,
+                    p.Description,
+                    p.ContentType,
+                    ImageUrl = $"api/products/{p.ProductId}/image"
+                }).ToList()
+            });
         }
 
         public async Task<bool> UpdateCategory(int categoryId, Category category)

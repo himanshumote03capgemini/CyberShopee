@@ -4,9 +4,6 @@ namespace CyberShopee.Repository.DAO
 {
     public interface ICategoryRepo
     {
-        Task<IEnumerable<Category>> GetAllCategories();
-
-        Task<Category> GetCategoryById(int categoryId);
 
         Task<bool> AddCategory(Category category);
 
@@ -14,6 +11,11 @@ namespace CyberShopee.Repository.DAO
 
         Task<bool> DeleteCategory(int categoryId);
 
-        Task<IEnumerable<Category>> SearchByCategoryName(string CategoryName);
+        Task<IEnumerable<object>> GetAllCategories();
+        
+        Task<object> GetCategoryById(int categoryId);
+        
+        Task<IEnumerable<object>> SearchByCategoryName(string categoryName);
+
     }
 }

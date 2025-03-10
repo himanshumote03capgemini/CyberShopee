@@ -46,58 +46,52 @@ namespace CyberShopee.Repository.Service
 
         public async Task<bool> DeleteProduct(int productId)
         {
-            var res = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == productId);
-            if (res == null) return false;
-            _context.Products.Remove(res);
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == productId);
+            if (product == null) return false;
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            var res = _context.Products;
-            if(res==null) return Enumerable.Empty<Product>();
-            return res;
+            var products = await _context.Products.ToListAsync();
+            return products;
         }
 
         public async Task<Product> GetProductById(int productId)
         {
-            var res = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == productId);
-            if (res == null) return null;
-            return res;
+            var product = await _context.Products.FindAsync(productId);
+            return product;
         }
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryId(int categoryId)
         {
-            var res = await _context.Products.Where(x => x.CategoryId == categoryId).ToListAsync();
-            if (res == null) return Enumerable.Empty<Product>();
-            return res;
+            var products = await _context.Products.Where(x => x.CategoryId == categoryId).ToListAsync();
+            return products;
 
         }
 
         public async Task<IEnumerable<Product>> GetProductsByPriceRange(double minPrice, double maxPrice)
         {
-            var res = await _context.Products.Where(x => x.Cost >=minPrice && x.Cost <= maxPrice).ToListAsync();
-            if (res == null) return Enumerable.Empty<Product>();
-            return res;
+            var products = await _context.Products.Where(x => x.Cost >=minPrice && x.Cost <= maxPrice).ToListAsync();
+            return products;
         }
 
         public async Task<IEnumerable<Product>> GetTopSellingProducts(int count)
         {
-            var res = await _context.Products
+            var products = await _context.Products
                                 .OrderByDescending(p => p.OrderDetails.Sum(od => od.Quantity))
                                 .Take(count)
                                 .ToListAsync();
-            if (res == null) return null;
-            return res;
+            return products;
 
         }
 
         public async Task<IEnumerable<Product>> SearchProducts(string name)
         {
-            var res = await _context.Products.Where(x => x.ModelName.ToLower().Contains(name.ToLower())).ToListAsync();
-            if (res == null) return null;
-            return res;
+            var products = await _context.Products.Where(x => x.ModelName.ToLower().Contains(name.ToLower()) || x.ModelNumber.ToLower().Contains(name.ToLower())).ToListAsync();
+            return products;
         }
 
         public async Task<bool> UpdateProduct(int productId, IFormFile file, int categoryId, string modelNumber, string modelName, double cost, string description, int quantity)
