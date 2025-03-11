@@ -1,4 +1,5 @@
-﻿using CyberShopee.Data;
+﻿using CyberShopee.CustomException;
+using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Repository.DAO;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace CyberShopee.Repository.Service
             try
             {
                 if (file == null || file.Length == 0)
-                    return false; // No file uploaded
+                    throw new ProductException("Image is Required");
 
                 using (var memoryStream = new MemoryStream())
                 {

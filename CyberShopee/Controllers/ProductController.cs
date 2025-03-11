@@ -1,4 +1,5 @@
-﻿using CyberShopee.Repository.DAO;
+﻿using CyberShopee.CustomException;
+using CyberShopee.Repository.DAO;
 using CyberShopee.Repository.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -146,11 +147,18 @@ namespace CyberShopee.Controllers
             [FromForm] string description,
             [FromForm] int quantity)
         {
-            var result = await _repository.AddProduct(file, categoryId, modelNumber, modelName, cost, description, quantity);
-            if (!result)
-                return BadRequest("Failed to add product. Please check input data.");
+            try
+            {
+                var result = await _repository.AddProduct(file, categoryId, modelNumber, modelName, cost, description, quantity);
+                if (!result)
+                    return BadRequest("Failed to add product. Please check input data.");
 
-            return Ok("Product added successfully.");
+                return Ok("Product added successfully.");
+            }
+            catch(ProductException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // Update an existing product
@@ -164,7 +172,7 @@ namespace CyberShopee.Controllers
             [FromForm] double cost,
             [FromForm] string description,
             [FromForm] int quantity)
-        {
+        {  
             var result = await _repository.UpdateProduct(productId, file, categoryId, modelNumber, modelName, cost, description, quantity);
             if (!result)
                 return NotFound("Product not found or update failed.");
