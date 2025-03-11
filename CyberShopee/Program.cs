@@ -1,8 +1,12 @@
 
+using System.Text;
 using CyberShopee.Data;
 using CyberShopee.Repository.DAO;
 using CyberShopee.Repository.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace CyberShopee
 {
@@ -23,13 +27,78 @@ namespace CyberShopee
             builder.Services.AddScoped<IOrderDetailsRepo, OrderDetailsRepository>();
             builder.Services.AddScoped<IProductRepo, ProductRepository>();
             builder.Services.AddScoped<IShoppingCartRepo, ShoppingCartRepository>();
+            builder.Services.AddScoped<IAuthRepo, AuthRepository>();
+
+
+            // Code for JWT Authentication
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "https://localhost:7043",
+                        // ValidIssuer = builder.Configuration["JWT:issuer"],
+                        ValidAudience = "https://localhost:7043",
+                        // ValidateAudience = builder.Configuration["JWT:audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsMySecreteKeyForCyberShopee"))
+                    };
+                });
+            builder.Services.AddAuthorization();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+            
+            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "Jwt",
+                    Scheme = "bearer"
+                });
+
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
+
+            // Add CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200") // Angular app URL
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
 
             var app = builder.Build();
+            app.UseCors("AllowAngular");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -40,6 +109,7 @@ namespace CyberShopee
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

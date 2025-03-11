@@ -20,9 +20,14 @@ namespace CyberShopee.Models
         [Required]
         public string Address { get; set; }
 
+        [Required]
+        public string DeliveryAddress { get; set; }
+        public string UserRole { get; set; } = "User";
+        
+
 
         // Navigation Property
-        public ICollection<Order> Orders { get; set; }
-        public ICollection<ShoppingCart> ShoppingCarts { get; set; }
+        public ICollection<Order>? Orders { get; set; }
+        public ICollection<ShoppingCart>? ShoppingCarts { get; set; }
     }
 }

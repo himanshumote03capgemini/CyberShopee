@@ -113,7 +113,7 @@ namespace CyberShopee.Controllers
                 p.ContentType,
                 ImageUrl = $"api/products/{p.ProductId}/image"
             });
-            return Ok(products);
+            return Ok(productList);
         }
 
         // Get top-selling products
@@ -132,7 +132,7 @@ namespace CyberShopee.Controllers
                 p.ContentType,
                 ImageUrl = $"api/products/{p.ProductId}/image"
             });
-            return Ok(products);
+            return Ok(productList);
         }
 
         // Add a new product
