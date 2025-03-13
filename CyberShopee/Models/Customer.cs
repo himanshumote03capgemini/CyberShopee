@@ -22,7 +22,8 @@ namespace CyberShopee.Models
 
         [Required]
         public string DeliveryAddress { get; set; }
-        public string UserRole { get; set; } = "User";
+
+        public string UserRole = "Customer";
         
 
 

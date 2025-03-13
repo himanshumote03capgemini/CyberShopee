@@ -37,7 +37,7 @@ namespace CyberShopee.Repository.Service
             return new AuthResponseModel
             {
                 CustomerId = customer.CustomerId,
-                UserName = customer.Email,
+                Email = customer.Email,
                 UserRole = customer.UserRole,
                 Token = token
             };

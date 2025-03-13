@@ -40,11 +40,11 @@ namespace CyberShopee
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "https://localhost:7043",
-                        // ValidIssuer = builder.Configuration["JWT:issuer"],
-                        ValidAudience = "https://localhost:7043",
-                        // ValidateAudience = builder.Configuration["JWT:audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsMySecreteKeyForCyberShopee"))
+                        //ValidIssuer = "https://localhost:7043",
+                        ValidIssuer = builder.Configuration["JWT:Issuer"],
+                        //ValidAudience = "https://localhost:7043",
+                        ValidAudience = builder.Configuration["JWT:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
                     };
                 });
             builder.Services.AddAuthorization();
