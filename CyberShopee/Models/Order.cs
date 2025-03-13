@@ -24,7 +24,7 @@ namespace CyberShopee.Models
 
 
         // Navigation Properties
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
         public ICollection<OrderDetails>? OrderDetails { get; set; }
     }
 }

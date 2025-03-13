@@ -5,6 +5,7 @@ using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Models.DTO;
 using CyberShopee.Repository.DAO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,17 +14,23 @@ namespace CyberShopee.Repository.Service
     public class AuthRepository : IAuthRepo
     {
         private readonly AppDbContext _context;
+        private readonly PasswordHasher<Customer> _passwordHasher;
         public AuthRepository(AppDbContext context) {
             _context = context; 
+            _passwordHasher = new PasswordHasher<Customer>();
         }
 
         public AuthResponseModel? Login(LoginModel login)
         {
             var customer = _context.Customers
-                .FirstOrDefault(x => x.Email == login.Email && x.Password == login.Password);
+                .FirstOrDefault(x => x.Email == login.Email);
 
             if (customer == null)
                 return null;
+
+            // Verify hashed password
+            var result = _passwordHasher.VerifyHashedPassword(customer, customer.Password, login.Password);
+            if (result != PasswordVerificationResult.Success) return null;
 
             string token = GenerateJwtToken(customer);
 

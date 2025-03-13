@@ -1,6 +1,7 @@
 ﻿using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Repository.DAO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CyberShopee.Repository.Service
@@ -8,12 +9,18 @@ namespace CyberShopee.Repository.Service
     public class CustomerRepository : ICustomerRepo
     {
         private readonly AppDbContext _context;
-        public CustomerRepository(AppDbContext context) { _context = context; }
+        private readonly PasswordHasher<Customer> _passwordHasher;
+        public CustomerRepository(AppDbContext context) 
+        { 
+            _context = context;
+            _passwordHasher = new PasswordHasher<Customer>();
+        }
 
         public async Task<bool> AddCustomer(Customer customer)
         {
             var res = _context.Customers.FirstOrDefault(x => x.Email == customer.Email);
             if (res != null) return false;
+            customer.Password = _passwordHasher.HashPassword(customer, customer.Password);
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
             return true;
