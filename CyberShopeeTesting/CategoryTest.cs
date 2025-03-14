@@ -26,6 +26,8 @@ public class CategoryTest
             };
     }
 
+
+    // Test Methods for Get Controller
     [TestMethod]
     public async Task GetCategory_WithExistingCategory_ReturnsOk()
     {
@@ -76,13 +78,15 @@ public class CategoryTest
     }
 
 
+    // Test Methods for Add Controller
     [TestMethod]
-    public async Task CreateCategory_WithValidModel_ReturnsCreatedAtAction()
+    public async Task AddCategory_WithValidModel_ReturnsCreatedAtAction()
     {
         // Arrange
         var validCategory = new Category { CategoryId = 3, Name = "Category 3", Description = "Desc3" };
 
-        mockCategoryRepo.Setup(repo => repo.AddCategory(validCategory)).ReturnsAsync(true);
+        mockCategoryRepo.Setup(repo => repo.AddCategory(validCategory))
+                                .ReturnsAsync(true); // Simulate successful Add
         var controller = new CategoryController(mockCategoryRepo.Object);
 
         // Act
@@ -109,12 +113,13 @@ public class CategoryTest
         var result = await controller.AddCategory(invalidCategory);
 
         // Assert
-        Assert.IsInstanceOfType< BadRequestObjectResult>(result); // Expect BadRequestObjectResult
+        Assert.IsInstanceOfType<BadRequestObjectResult>(result); // Expect BadRequestObjectResult
 
         var badRequestResult = result as BadRequestObjectResult;
         Assert.AreEqual("Invalid category data.", badRequestResult.Value); // Validate error message
     }
 
+    // Test Methods for Update Controller
     [TestMethod]
     public async Task UpdateCategory_WithValidModel_ReturnsOk()
     {
@@ -180,7 +185,7 @@ public class CategoryTest
     }
 
 
-    // 
+    // Test Methods for Delete Controller
     [TestMethod]
     public async Task DeleteCategory_WithExistingCategory_ReturnsOk()
     {
@@ -221,6 +226,8 @@ public class CategoryTest
         Assert.AreEqual("Category not found or delete failed.", notFoundResult.Value);
     }
 
+
+    // Test Methods for Search Controller
     [TestMethod]
     public async Task SearchByCategoryName_WithExistingCategory_ReturnsOk()
     {
@@ -264,9 +271,6 @@ public class CategoryTest
         var notFoundResult = result as NotFoundObjectResult;
         Assert.AreEqual("Category not found.", notFoundResult.Value);
     }
-
-
-
 
 
 
