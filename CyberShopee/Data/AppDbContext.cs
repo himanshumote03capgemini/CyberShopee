@@ -1,4 +1,5 @@
 ﻿using CyberShopee.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CyberShopee.Data
@@ -13,7 +14,7 @@ namespace CyberShopee.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-
+        public DbSet<Admin> Admin { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,17 @@ namespace CyberShopee.Data
                 .WithMany(p => p.OrderDetails)
                 .HasForeignKey(od => od.ProductId)
                 .OnDelete(DeleteBehavior.SetNull); // Sets ProductId=NULL instead of deleting the OrderDetails
+
+            var _passwordHasher = new PasswordHasher<Admin>();
+            var hashedPassword = _passwordHasher.HashPassword(null, "admin@123"); // Admin Password
+            modelBuilder.Entity<Admin>().HasData(new Admin
+            {
+                AdminId = 1,
+                AdminName = "Himanshu",
+                Email = "admin@gmail.com",
+                Password = hashedPassword,
+                UserRole = "Admin"
+            });
         }
     }
 }

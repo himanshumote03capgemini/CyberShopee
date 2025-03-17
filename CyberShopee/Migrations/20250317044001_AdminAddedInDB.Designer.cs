@@ -4,6 +4,7 @@ using CyberShopee.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CyberShopee.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317044001_AdminAddedInDB")]
+    partial class AdminAddedInDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace CyberShopee.Migrations
                             AdminId = 1,
                             AdminName = "Himanshu",
                             Email = "admin@gmail.com",
-                            Password = "AQAAAAIAAYagAAAAEOXMs6rAGLqzLB47a57VCtnVwGskOXTPok0YsRykhtVumRSukmK/zirdtj8xbTnZMg==",
+                            Password = "AQAAAAIAAYagAAAAEKv7+X4ITmN5Xl1ROU+HZYvQNf5UIv22LaD0jktCZYS9G3tz1Dthcm87HMik2K/ByA==",
                             UserRole = "Admin"
                         });
                 });

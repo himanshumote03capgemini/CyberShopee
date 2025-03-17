@@ -2,6 +2,7 @@
 using System.Text;
 using CyberShopee.Data;
 using CyberShopee.Repository.DAO;
+using CyberShopee.Repository.JWT;
 using CyberShopee.Repository.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,10 @@ namespace CyberShopee
             builder.Services.AddScoped<IProductRepo, ProductRepository>();
             builder.Services.AddScoped<IShoppingCartRepo, ShoppingCartRepository>();
             builder.Services.AddScoped<IAuthRepo, AuthRepository>();
+            builder.Services.AddScoped<IAdminRepo, AdminRepository>();
+
+            // Register Token as Singleton
+            builder.Services.AddSingleton<Token>();
 
 
             // Code for JWT Authentication

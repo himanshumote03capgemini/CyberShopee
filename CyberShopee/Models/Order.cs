@@ -5,22 +5,15 @@ namespace CyberShopee.Models
 {
     public class Order
     {
-        [Key]
-        public int OrderId { get; set; }
-
-        [Required]
-        public DateTime OrderDate { get; set; }
-
-        [Required]
-        public double TotalAmount { get; set; }
+        [Key] public int OrderId { get; set; }
+        [Required] public DateTime OrderDate { get; set; }
+        [Required] public double TotalAmount { get; set; }
 
         public DateTime ShipDate { get; set; }
-
         public string Status { get; set; } = "Pending";
 
         // Foreign Keys
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
+        [ForeignKey("Customer")] public int CustomerId { get; set; }
 
 
         // Navigation Properties

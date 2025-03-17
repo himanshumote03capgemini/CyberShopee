@@ -1,12 +1,15 @@
-﻿namespace CyberShopee.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CyberShopee.Models
 {
     public class Admin
     {
-        public int AdminId { get; set; }
-        public string AdminName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
 
-        public string UserRole = "Admin";
+        [Key] public int AdminId { get; set; }
+        [Required] public string AdminName { get; set; }
+        [Required, EmailAddress] public string Email { get; set; }
+        [Required] public string Password { get; set; }
+
+        public string UserRole { get; set; } = "Admin";
     }
 }

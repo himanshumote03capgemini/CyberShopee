@@ -5,12 +5,8 @@ namespace CyberShopee.Models
 {
     public class Category
     {
-        [Key]
-        public int CategoryId { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
+        [Key] public int CategoryId { get; set; }
+        [Required] public string Name { get; set; }
         public string Description { get; set; }
 
 

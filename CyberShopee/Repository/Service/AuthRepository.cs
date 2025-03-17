@@ -5,6 +5,7 @@ using CyberShopee.Data;
 using CyberShopee.Models;
 using CyberShopee.Models.DTO;
 using CyberShopee.Repository.DAO;
+using CyberShopee.Repository.JWT;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,9 +16,11 @@ namespace CyberShopee.Repository.Service
     {
         private readonly AppDbContext _context;
         private readonly PasswordHasher<Customer> _passwordHasher;
-        public AuthRepository(AppDbContext context) {
+        private readonly IConfiguration _configuration;
+        public AuthRepository(AppDbContext context, IConfiguration configuration) {
             _context = context; 
             _passwordHasher = new PasswordHasher<Customer>();
+            _configuration = configuration;
         }
 
         public AuthResponseModel? Login(LoginModel login)
@@ -32,17 +35,19 @@ namespace CyberShopee.Repository.Service
             var result = _passwordHasher.VerifyHashedPassword(customer, customer.Password, login.Password);
             if (result != PasswordVerificationResult.Success) return null;
 
-            string token = GenerateJwtToken(customer);
+            Token t = new Token(_configuration);
+            string token = t.GenerateJwtToken(customer);
 
             return new AuthResponseModel
             {
-                CustomerId = customer.CustomerId,
+                Id = customer.CustomerId,
                 Email = customer.Email,
                 UserRole = customer.UserRole,
                 Token = token
             };
         }
 
+        /*
         private string GenerateJwtToken(Customer existing)
         {
             // Code to set Claim
@@ -66,5 +71,6 @@ namespace CyberShopee.Repository.Service
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;
         }
+        */
     }
 }

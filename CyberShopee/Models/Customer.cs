@@ -4,24 +4,15 @@ namespace CyberShopee.Models
 {
     public class Customer
     {
-        [Key]
-        public int CustomerId { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        [Key] public int CustomerId { get; set; }
+        [Required] public string Name { get; set; }
+        [Required, EmailAddress] public string Email { get; set; }
 
         public string? Password { get; set; }
-
         public string? Phone { get; set; }
 
-        [Required]
-        public string Address { get; set; }
-
-        [Required]
-        public string DeliveryAddress { get; set; }
+        [Required] public string Address { get; set; }
+        [Required] public string DeliveryAddress { get; set; }
 
         public string UserRole = "Customer";
         
